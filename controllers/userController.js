@@ -10,20 +10,17 @@ module.exports = {
     },
     // Get a single user by its ID and populated thought and friend data
     getUser(req, res) {
-        User.findOne({ _id: req.params.userId })
-        .populate([
-            { path: "thoughts", select: "-__v" },
-            { path: "friends", select: "-__v" },
-          ])
+        User.findOne({ _id: req.params.id })
+          .populate('thoughts')
+          .populate('friends')
           .select("-__v")
-          .then((user) => {
-          if (!user) {
+          .then((userData) => {
+          if (!userData) {
             res.status(404).json({ message: "User not found"})
-            return;
           }
-          res.json(user)
+          else res.json(userData)
         }) .catch((err) => {
-            res.status(404).json(err)
+            res.status(404).json({ message: "This part isn't working"})
         })
     },
     // Post a new User
